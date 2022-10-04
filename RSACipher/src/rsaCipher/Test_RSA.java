@@ -1,3 +1,5 @@
+package rsaCipher;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -6,6 +8,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class Test_RSA {
@@ -23,28 +26,32 @@ public class Test_RSA {
 		r.generateKeys();
 		
 		/* Read  public key*/
-		Path path = Paths.get("./public.key");
+		Path path = Paths.get("./data/public.key");
 		byte[] bytes = Files.readAllBytes(path);
 		//Public key is stored in x509 format
 		X509EncodedKeySpec keyspec = new X509EncodedKeySpec(bytes);
 		KeyFactory keyfactory = KeyFactory.getInstance("RSA");
 		PublicKey publicKey = keyfactory.generatePublic(keyspec);
-		System.out.println(publicKey);
 		
 		/* Read private key */
-		path = Paths.get("./private.key");
+		path = Paths.get("./data/private.key");
 		byte[] bytes2 = Files.readAllBytes(path);
 		//Private key is stored in PKCS8 format
 		PKCS8EncodedKeySpec keyspec2 = new PKCS8EncodedKeySpec(bytes2);
 		KeyFactory keyfactory2 = KeyFactory.getInstance("RSA");
 		PrivateKey privateKey = keyfactory2.generatePrivate(keyspec2);
-
-		System.out.println(privateKey);
-
 		
 
 		//TEST cipher and decipher
-		String txt = "Hola esto es un mensaje muy importante, no lo puede leer mi mama";
+		path = Paths.get("./data/test0.txt");
+		String txt = new String();
+		
+		try {
+			txt = Files.readString(path);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		byte[] txtBytes = txt.getBytes(); 
 		byte[] txtEncrypt = r.encrypt(txtBytes, publicKey);
 
@@ -54,16 +61,22 @@ public class Test_RSA {
 
 		byte[] txtDecrypt = r.decrypt(txtEncrypt, privateKey);
 		
-		System.out.println("\n\n ========= Deciphered text: =========");		
+		System.out.println("\n\n========= Deciphered text: =========");		
 		String txtFinal = new String(txtDecrypt);
 		System.out.println(txtFinal);
 
-
-
 		//TEST sign and verify
-		String txtToSign = "Hola esto es un mensaje muy importante, no lo puede leer mi mama";
-		String txtToSign2 = "Hola esto es un mensaje muy importante, pero lo puede leer la mama";
-		byte[] txtBytes2 = txtToSign.getBytes();
+	
+		path = Paths.get("./data/test1.txt");
+		String txtToSign2 = new String();
+		
+		try {
+			txtToSign2 = Files.readString(path);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		byte[] txtBytes2 = txt.getBytes();
 		byte[] txtSign = r.sign(txtBytes2, privateKey);
 
 		System.out.println("========= Text signed =========");

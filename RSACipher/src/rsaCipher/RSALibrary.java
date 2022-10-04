@@ -1,3 +1,5 @@
+package rsaCipher;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,10 +26,10 @@ public class RSALibrary {
   public final String ALGORITHM = "RSA";
 
   //String to hold the name of the private key file.
-  public final String PRIVATE_KEY_FILE = "./private.key";
+  public final String PRIVATE_KEY_FILE = "./data/private.key";
 
   // String to hold name of the public key file.
-  public final String PUBLIC_KEY_FILE = "./public.key";
+  public final String PUBLIC_KEY_FILE = "./data/public.key";
 
   /***********************************************************************************/
    /* Generates an RSA key pair (a public and a private key) of 1024 bits length */
@@ -127,9 +129,9 @@ public class RSALibrary {
     try {
 
 	  // Gets a Signature object
-    Signature signature = Signature.getInstance("SHA1withRSA");
+      Signature signature = Signature.getInstance("SHA1withRSA");
 
-	  //Initialize the signature oject with the private key
+	  //Initialize the signature object with the private key
 	  signature.initSign(key);
 	
 	  //Set plaintext as the bytes to be signed
